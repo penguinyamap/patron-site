@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom'; // 追加
+import { Link } from 'react-router-dom'; 
 import { SessionContext } from "../SessionProvider";
 
 export function Post(props) {
@@ -11,7 +11,7 @@ export function Post(props) {
       <h3 className="text-lg font-semibold">
         by{' '}
         <Link
-          to={`/profile/${post.userId}`}
+          //profileへの遷移リンクがあったとこ　to={`/profile/${post.userId}`}
           className="text-blue-600 hover:underline"
         >
           {post.userName}
