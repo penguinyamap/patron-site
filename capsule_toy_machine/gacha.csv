@@ -1,0 +1,6 @@
+item,weight,gachaNum
+https://example.com/ultra-rare,1,0
+https://example.com/rare,9,0
+https://example.com/normal,90,0
+https://example.com/rare2,10,1
+https://example.com/normal2,90,1

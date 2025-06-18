@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html  lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<title>ガチャ</title>
+	</head>
+	<body>
+<link rel="stylesheet" href="style.css">
+<!--カプセル排出のモーダルウィンドウここから-->
+<div id="gachaModal" class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3>学芸本ガチャ!　</h3>
+			<h2 id="gachaTitleTxt"></h2>
+		</div>
+		<div class="modal-body">
+			<img id="playGif" src="" alt="抽選のアニメーション" style="display: block; margin: auto;">
+			<p>アニメーション終了後、当たった本の蔵書検索詳細画面に遷移します。
+                           タイトルの下の「電子資料を表示」をクリックしてください。</p>
+			<button class="js-result">結果だけ見る</button>
+			
+		</div>
+	</div>
+</div>
+<!--カプセル排出のモーダルウィンドウここまで-->
+
+<!--☆☆☆ガチャガチャNo.0の設置ここから：choiceGachaBox(0)←ここの数字でガチャガチャを選択☆☆☆-->
+<div class="modal-btn" onclick="choiceGachaBox(0)" style="cursor: pointer;">
+	<img loading="lazy" src="gachagacha.png" width="250" height="400" alt="論文・レポートのガチャ">
+	<p >タップしてガチャを回す</p>
+</div>
+<!--☆☆☆ガチャガチャNo.0の設置ここまで：choiceGachaBox(0)←ここの数字でガチャガチャを選択☆☆☆-->
+
+<!--この下に新規のガチャガチャを追加-->
+
+<div class="clear"></div>
+<script src="main.js" defer></script>
+	</body>
+</html>
