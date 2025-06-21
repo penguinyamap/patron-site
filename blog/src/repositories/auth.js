@@ -1,47 +1,52 @@
-import {supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 
 export const authRepository = {
-    async signup(name, email, password) {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-            data: { name }, // metadata に保存
-    },
-  });
-  if (error != null) throw new Error(error.message);
-  return {
-    ...data.user,
-    userName: data.user?.user_metadata?.name || '',
-  };
-},
+  async signup(name, email, password) {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name },
+      },
+    });
 
-    async signin(email, password) {
-        const {data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        if (error) throw new Error(error.message);
-        return{
-            ...data.user,
-            userName: data.user?.user_metadata?.name || '',
-        };
-    },
+    if (error != null) throw new Error(error.message);
 
-    async getCurrentUser() {
-        const { data, error } = await supabase.auth.getSession();
-        if (error != null) throw new Error(error.message);
-        if (data.session == null) return;
+    const user = data.user;
 
-        return{
-            ...data.session.user,
-            userName: data.session?.user?.user_metadata?.name || '',
-        };
-    },
+    const { error: insertError } = await supabase
+      .from('users')
+      .insert([
+        {
+          id: user.id,
+          user_name: name,
+          icon_url: null,
+        },
+      ]);
 
-    async signout(){
-        const {error} = await supabase.auth.signOut();
-        if (error != null) throw new Error(error.message);
-        return true;
-    },
+    if (insertError != null) {
+      console.error('usersテーブルへの挿入に失敗:', insertError);
+      throw new Error('ユーザー登録に失敗しました');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      userName: name,
+    };
+  },
+
+  //追加：signin関数
+  async signin(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error != null) {
+      throw new Error('ログインに失敗しました');
+    }
+
+    return data.user;
+  },
 };

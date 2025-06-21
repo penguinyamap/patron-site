@@ -21,7 +21,7 @@ function Profile() {
   return (
     <div className="container mx-auto mt-6 p-4">
       <h1 className="text-2xl font-bold mb-4">{user.userName} さんのプロフィール</h1>
-      <p>ユーザーID: {user.id}</p>
+      {/*<p>ユーザーID: {user.id}</p> */}
       {/* 必要に応じて他の情報も表示 */}
     </div>
   );
