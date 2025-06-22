@@ -48,7 +48,7 @@ export function Post(props) {
       <h3 className="text-lg font-semibold">
         by{' '}
         <Link
-          // to={`/profile/${post.userId}`} // プロフィールへのリンクを有効にする場合はコメントアウトを解除
+          to={`/profile/${post.userId}`} 
           className="text-blue-600 hover:underline"
         >
           {post.userName}
