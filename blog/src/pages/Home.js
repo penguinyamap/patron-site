@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react'; // useRef を追加
 import { SessionContext } from '../SessionProvider';
 import { Navigate } from 'react-router-dom';
 import { SideMenu } from '../components/SideMenu';
@@ -8,7 +8,7 @@ import { postRepository } from '../repositories/post.js';
 import { authRepository } from '../repositories/auth';
 
 const limit = 5;
-const MAX_POST_ATTACHMENT_SIZE = 512 * 1024 * 1024; // 1ポストあたりの添付ファイルの合計最大サイズを512MBに設定
+const MAX_POST_ATTACHMENT_SIZE = 500 * 1024 * 1024; // 1ポストあたりの添付ファイルの合計最大サイズを500MBに設定
 
 function Home() {
   const [content, setContent] = useState('');
@@ -19,17 +19,15 @@ function Home() {
   const [editedContent, setEditedContent] = useState('');
   const { currentUser, setCurrentUser } = useContext(SessionContext);
 
+  // useRef を使ってファイル入力要素への参照を作成
+  const fileInputRef = useRef(null); 
+
   useEffect(() => {
     fetchPosts(page);
   }, []);
 
   const createPost = async () => {
     // 実際のアプリケーションでは、mediaFilesをFormDataなどを使ってバックエンドに送信する必要があります。
-    // 例: const newPost = await postRepository.create(content, currentUser.id, mediaFiles);
-
-    // バックエンド連携の仮実装
-    // ここで実際にファイルをサーバーにアップロードする処理が入ります
-    // 例: const uploadedMediaUrls = await uploadFilesToServer(mediaFiles);
     // 現状はUI表示のための一時URLを使用
     const mediaUrls = mediaFiles.map(file => URL.createObjectURL(file)); 
     
@@ -45,15 +43,17 @@ function Home() {
     
     setContent('');
     setMediaFiles([]); // 投稿後、メディアファイルをリセット
+
+    // ★追加: ファイル入力の値をクリア
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     let currentTotalSize = 0;
-    let validFiles = [];
 
-    // 既存のmediaFilesに新しいファイルを追加する前に、合計サイズを計算
-    // これは、ユーザーが複数回に分けてファイルを選択する可能性を考慮しています。
     const newFilesCandidate = [...mediaFiles, ...files]; 
 
     for (const file of newFilesCandidate) {
@@ -62,14 +62,13 @@ function Home() {
 
     if (currentTotalSize > MAX_POST_ATTACHMENT_SIZE) {
       alert(`選択されたファイルの合計サイズが ${MAX_POST_ATTACHMENT_SIZE / (1024 * 1024)}MB を超えています。`);
-      // 合計サイズを超えた場合は、ファイル選択をリセットするか、エラーメッセージを表示して何もしない
-      setMediaFiles([]); // すべての選択をリセット
-      e.target.value = ''; // input type="file" の値をリセット
+      setMediaFiles([]); 
+      // ★修正: ここも ref を使って値をクリアする方が確実
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       return;
     }
-
-    // ここで個別のファイルサイズのチェックは不要（合計サイズでカバーされるため）
-    // 必要であれば個別のMAX_FILE_SIZEもここで設定可能
     
     setMediaFiles(newFilesCandidate);
   };
@@ -141,11 +140,13 @@ function Home() {
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
               />
+              {/* ★追加: ref={fileInputRef} を設定 */}
               <input
                 type="file"
                 multiple
-                accept="image/*,video/*,audio/*,application/*,text/*" // ほとんどのファイルを受け付ける
+                accept="image/*,video/*,audio/*,application/*,text/*"
                 onChange={handleFileChange}
+                ref={fileInputRef} 
                 className="mb-4 block w-full text-sm text-gray-500
                            file:mr-4 file:py-2 file:px-4
                            file:rounded-full file:border-0
