@@ -94,4 +94,26 @@ export const postRepository = {
       media: post.media || [],
     }));
   },
+
+  //削除と編集の機能が消えてたから追加。AI勝手に消すなよ!
+  async delete(id) {
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .eq('id', id);
+
+      if (error != null) throw new Error(error.message);
+      return true;
+    },
+
+    async update(id, newContent) {
+      const { error } = await supabase
+        .from('posts')
+        .update({ content: newContent })
+        .eq('id', id);
+
+      if (error != null) throw new Error(error.message);
+      return true;
+    },
+
 };
