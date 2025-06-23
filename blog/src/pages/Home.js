@@ -35,11 +35,12 @@ function Home() {
     const post = await postRepository.create(content, currentUser.id,mediaFiles);
 
     setPosts([{ 
-      ...post, 
-      userId: currentUser.id, 
-      userName: currentUser.userName,
-      mediaUrls: mediaUrls // メディアURLを追加
-    }, ...posts]);
+  ...post, 
+  userId: currentUser.id, 
+  userName: currentUser.user_metadata?.name || currentUser.userName || '名無しユーザー',
+  mediaUrls: mediaUrls
+}, ...posts]);
+
     
     setContent('');
     setMediaFiles([]); // 投稿後、メディアファイルをリセット
