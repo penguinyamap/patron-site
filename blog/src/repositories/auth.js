@@ -49,4 +49,9 @@ export const authRepository = {
 
     return data.user;
   },
+//ログアウト機能　こいつもAIが勝手に消してるし
+  async signout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
+  },
 };
