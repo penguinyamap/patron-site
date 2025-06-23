@@ -32,7 +32,7 @@ function Home() {
     const mediaUrls = mediaFiles.map(file => URL.createObjectURL(file)); 
     
     // 既存のテキスト投稿ロジックと結合
-    const post = await postRepository.create(content, currentUser.id);
+    const post = await postRepository.create(content, currentUser.id,mediaFiles);
 
     setPosts([{ 
       ...post, 
