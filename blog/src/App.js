@@ -1,4 +1,4 @@
-import {BrowserRouter, Route,Routes} from 'react-router-dom';
+import {HashRouter,Route,Routes} from 'react-router-dom';
 import Home from './pages/Home';
 import Signin from './pages/Signin';
 import Signup from './pages/Signup';
@@ -6,7 +6,7 @@ import Profile from './pages/Profile';
 
 function App() {
   return(
-    <BrowserRouter>
+    <HashRouter>
       <div className = "App">
         <div>
           <Routes>
@@ -17,7 +17,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
